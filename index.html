@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>TezTaom.uz — Milliy Taomlar va Mini App</title>
+
+  <!-- Telegram WebApp SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+        }
+      }
+    };
+  </script>
+
+  <style>
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    body {
+      -webkit-tap-highlight-color: transparent;
+    }
+  </style>
+</head>
+<body class="bg-stone-100 text-slate-900 font-sans antialiased min-h-screen">
+
+  <!-- Toast notifications -->
+  <div id="toast-container" class="fixed top-4 left-4 right-4 sm:left-auto sm:right-4 sm:w-80 z-[70] flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ===================================================================== -->
+  <!-- ASOSIY SAHIFA: MILLIY TAOMLAR BANNERI VA BOSILADIGAN HAVOLA           -->
+  <!-- ===================================================================== -->
+  <div class="max-w-xl mx-auto px-4 py-6 sm:py-10 min-h-screen flex flex-col justify-center">
+    <div class="bg-white rounded-3xl border border-stone-200 shadow-lg overflow-hidden">
+
+      <!-- Bosiladigan milliy taomlar banneri (Osh, Somsa, Shashlik, Patir) -->
+      <button
+        type="button"
+        id="national-dishes-banner-btn"
+        onclick="openMiniAppWorkspace('client')"
+        aria-label="Milliy taomlar banneri — TezTaom Mini App ilovasini ochish"
+        class="group relative w-full text-left focus:outline-none focus:ring-4 focus:ring-orange-400/60 block overflow-hidden"
+      >
+        <div class="grid grid-cols-2 grid-rows-2 gap-1 bg-stone-900 h-64 sm:h-72">
+          <!-- 1. Osh -->
+          <div class="relative overflow-hidden">
+            <img
+              src="https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=800&q=80"
+              alt="O'zbek milliy oshi"
+              onerror="this.src='https://placehold.co/500x350/ea580c/ffffff?text=Osh'"
+              class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+            />
+            <span class="absolute bottom-2 left-2 px-2 py-0.5 rounded-lg bg-black/65 text-white text-[11px] font-extrabold">
+              🍲 Osh
+            </span>
+          </div>
+
+          <!-- 2. Somsa -->
+          <div class="relative overflow-hidden">
+            <img
+              src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80"
+              alt="Tandir somsa"
+              onerror="this.src='https://placehold.co/500x350/d97706/ffffff?text=Somsa'"
+              class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+            />
+            <span class="absolute bottom-2 left-2 px-2 py-0.5 rounded-lg bg-black/65 text-white text-[11px] font-extrabold">
+              🥟 Somsa
+            </span>
+          </div>
+
+          <!-- 3. Shashlik -->
+          <div class="relative overflow-hidden">
+            <img
+              src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80"
+              alt="Tandir va cho'g' shashlik"
+              onerror="this.src='https://placehold.co/500x350/b45309/ffffff?text=Shashlik'"
+              class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+            />
+            <span class="absolute bottom-2 left-2 px-2 py-0.5 rounded-lg bg-black/65 text-white text-[11px] font-extrabold">
+              🍢 Shashlik
+            </span>
+          </div>
+
+          <!-- 4. Patir non -->
+          <div class="relative overflow-hidden">
+            <img
+              src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80"
+              alt="Issiq patir non"
+              onerror="this.src='https://placehold.co/500x350/92400e/ffffff?text=Patir+non'"
+              class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+            />
+            <span class="absolute bottom-2 left-2 px-2 py-0.5 rounded-lg bg-black/65 text-white text-[11px] font-extrabold">
+              🫓 Patir non
+            </span>
+          </div>
+        </div>
+
+        <!-- Yuqori o'ng burchakdagi nishon -->
+        <div class="absolute top-3 right-3 px-3 py-1 rounded-full bg-orange-600/95 text-white text-xs font-extrabold shadow-md flex items-center gap-1">
+          <i data-lucide="flame" class="w-3.5 h-3.5 fill-white"></i>
+          <span>TezTaom.uz</span>
+        </div>
+
+        <!-- Pastki gradient sarlavha -->
+        <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/35 to-transparent p-4 pt-10 text-white">
+          <p class="text-xs font-semibold text-amber-300">O'zbekiston bo'ylab tezkor buyurtma</p>
+          <h1 class="text-lg sm:text-xl font-black tracking-tight mt-0.5">
+            Osh, Somsa, Shashlik va Issiq Patir
+          </h1>
+        </div>
+      </button>
+
+      <!-- Rasm tagidagi bosiladigan havola bloki -->
+      <div class="p-4 sm:p-5 bg-white border-t border-stone-100 space-y-3">
+        <div class="flex items-center justify-between gap-2">
+          <a
+            href="#teztaom-mini-app"
+            id="miniapp-deep-link"
+            onclick="handleDeepLinkClick(event)"
+            class="inline-flex items-center gap-2 text-sm sm:text-base font-extrabold text-orange-600 hover:text-orange-700 underline underline-offset-4 decoration-2 transition"
+          >
+            <span>🔗 TezTaom Mini App ilovasiga kirish</span>
+            <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+          </a>
+          <span class="text-[11px] font-bold text-slate-500 bg-stone-100 px-2.5 py-1 rounded-full shrink-0">
+            Mini App
+          </span>
+        </div>
+
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Rasmga yoki yuqoridagi havolaga bosing — viloyat va tumanni tanlab osh, somsa, shashlik hamda patirga buyurtma bering.
+        </p>
+
+        <div class="grid grid-cols-2 gap-2 pt-1">
+          <button
+            type="button"
+            onclick="openMiniAppWorkspace('client')"
+            class="py-2.5 px-3 rounded-xl bg-orange-600 hover:bg-orange-700 active:scale-[0.99] text-white text-xs font-extrabold transition shadow-sm"
+          >
+            🍽 Buyurtma berish
+          </button>
+          <button
+            type="button"
+            onclick="openMiniAppWorkspace('merchant')"
+            class="py-2.5 px-3 rounded-xl bg-stone-100 hover:bg-stone-200 active:scale-[0.99] text-slate-800 text-xs font-extrabold transition"
+          >
+            👨‍🍳 Tadbirkor kabineti
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- TEZTAOM MINI APP MODAL / WORKSPACE (ICHKI ILOVA OYNASI)               -->
+  <!-- ===================================================================== -->
+  <div
+    id="miniapp-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="miniapp-modal-title"
+    class="hidden fixed inset-0 z-50 bg-slate-900/65 backdrop-blur-xs flex flex-col justify-end sm:justify-center sm:p-4"
+  >
+    <div class="bg-stone-100 rounded-t-3xl sm:rounded-3xl max-w-3xl w-full h-[92vh] sm:h-[88vh] flex flex-col overflow-hidden shadow-2xl border border-stone-200 relative">
+
+      <!-- Mini App Sticky Header -->
+      <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-stone-200 shrink-0">
+        <div class="px-3.5 py-2.5 flex items-center justify-between gap-2">
+          <!-- Brend + Yopish -->
+          <div class="flex items-center gap-2 min-w-0">
+            <button
+              type="button"
+              onclick="closeMiniAppWorkspace()"
+              aria-label="Ilovani yopish"
+              class="w-8 h-8 rounded-xl bg-stone-100 hover:bg-stone-200 text-slate-700 flex items-center justify-center shrink-0 transition"
+            >
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+            <div class="flex items-center gap-1.5 min-w-0">
+              <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 text-white flex items-center justify-center shrink-0">
+                <i data-lucide="flame" class="w-3.5 h-3.5 fill-white"></i>
+              </div>
+              <span id="miniapp-modal-title" class="text-base font-black tracking-tight text-slate-900 truncate">
+                Tez<span class="text-orange-600">Taom</span>.uz
+              </span>
+            </div>
+          </div>
+
+          <!-- 3 ta rol tugmasi -->
+          <div class="flex items-center bg-stone-100 p-1 rounded-xl border border-stone-200 shrink-0">
+            <button id="role-btn-client" type="button" onclick="switchRole('client')" class="px-2.5 py-1.5 rounded-lg text-xs font-extrabold transition bg-slate-900 text-white shadow-xs">
+              🍽 Taomlar
+            </button>
+            <button id="role-btn-merchant" type="button" onclick="switchRole('merchant')" class="px-2.5 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 hover:text-slate-900">
+              👨‍🍳 Tadbirkor
+            </button>
+            <button id="role-btn-admin" type="button" onclick="switchRole('admin')" class="px-2.5 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 hover:text-slate-900">
+              💰 Foyda
+            </button>
+          </div>
+        </div>
+
+        <!-- Telegram Mini App ixcham foydalanuvchi va ulashish paneli -->
+        <div id="tg-miniapp-strip" class="px-3.5 pb-2 flex items-center justify-between gap-2 text-[11px]">
+          <div class="flex items-center gap-1.5 min-w-0 text-slate-600 font-semibold">
+            <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+            <span id="tg-user-label" class="truncate">Telegram foydalanuvchisi</span>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button type="button" onclick="shareMiniAppLink()" class="px-2 py-0.5 rounded-md bg-sky-50 text-sky-700 border border-sky-200 font-bold active:scale-95 transition">
+              Ulashish
+            </button>
+            <button type="button" onclick="openBotSupportChat()" class="px-2 py-0.5 rounded-md bg-stone-100 text-slate-700 border border-stone-200 font-bold active:scale-95 transition">
+              Bot
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Mini App Scrollable Body -->
+      <div id="miniapp-scroll-body" class="flex-1 overflow-y-auto px-3.5 pt-3 pb-24 space-y-4">
+
+        <!-- 1-ВКЛАДКА: МИЖОЗ ВИТРИНАСИ -->
+        <main id="view-client" class="space-y-3">
+          <!-- 2 ta hudud tanlovi: Viloyat | Tuman/Shahar -->
+          <div class="grid grid-cols-2 gap-2">
+            <select id="header-region-select" onchange="handleRegionChange(this.value)" aria-label="Viloyat" class="w-full px-3 py-2.5 rounded-xl bg-white border border-stone-200 text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500 shadow-2xs truncate">
+              <option value="Barcha viloyatlar">Barcha viloyatlar</option>
+            </select>
+
+            <select id="header-district-select" onchange="handleDistrictChange(this.value)" aria-label="Tuman yoki shahar" class="w-full px-3 py-2.5 rounded-xl bg-white border border-stone-200 text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500 shadow-2xs truncate">
+              <option value="Barcha tumanlar">Barcha tumanlar</option>
+            </select>
+          </div>
+
+          <!-- Qidiruv -->
+          <div class="relative">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+            <input
+              type="text"
+              id="food-search-input"
+              oninput="refreshClientCatalog()"
+              placeholder="Taom, pishiriq yoki oshxona qidirish..."
+              class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white border border-stone-200 text-xs font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 shadow-2xs"
+            />
+          </div>
+
+          <!-- Kategoriyalar -->
+          <div id="food-categories-bar" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5"></div>
+
+          <!-- Tumandagi oshxonalar -->
+          <div id="district-merchants-bar" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar"></div>
+
+          <!-- 2 ustunli mobil taomlar сеткаси -->
+          <div id="food-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3.5"></div>
+
+          <!-- Topilmadi holati -->
+          <div id="catalog-empty" class="hidden bg-white rounded-2xl border border-stone-200 p-8 text-center">
+            <p class="text-sm font-extrabold text-slate-800">Ushbu hududda taom topilmadi</p>
+            <button type="button" onclick="resetAllLocationFilters()" class="mt-3 px-4 py-2 rounded-xl bg-orange-600 text-white text-xs font-bold">
+              Barchasini ko'rsatish
+            </button>
+          </div>
+        </main>
+
+        <!-- 2-ВКЛАДКА: ТАДБИРКОР КАБИНЕТИ -->
+        <section id="view-merchant" class="hidden space-y-4">
+          <div class="bg-white rounded-2xl border border-stone-200 p-3.5 shadow-2xs flex items-center justify-between gap-3">
+            <div>
+              <span class="text-[11px] font-bold text-slate-500 block">Sof tushumingiz (<span id="merchant-share-percent">90</span>%):</span>
+              <span id="merchant-net-earnings" class="text-lg font-black text-emerald-700">0 so'm</span>
+            </div>
+            <button type="button" onclick="toggleAddDishForm()" class="px-3.5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 active:scale-95 text-white text-xs font-extrabold transition flex items-center gap-1.5 shadow-sm">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span>Yangi taom</span>
+            </button>
+          </div>
+
+          <!-- Yangi taom qo'shish formasi -->
+          <div id="merchant-add-card" class="hidden bg-white rounded-2xl border border-stone-200 p-4 shadow-sm">
+            <div class="flex items-center justify-between pb-3 border-b border-stone-100">
+              <h2 class="text-sm font-black text-slate-900">Yangi taom yoki pishiriq qo'shish</h2>
+              <button type="button" onclick="toggleAddDishForm()" class="p-1 rounded-lg bg-stone-100 text-slate-500">
+                <i data-lucide="x" class="w-4 h-4"></i>
+              </button>
+            </div>
+
+            <form id="add-food-form" onsubmit="handleAddFoodProduct(event)" class="mt-3 space-y-3">
+              <div class="flex items-center gap-3">
+                <label for="m-food-photo-input" class="relative w-20 h-20 rounded-2xl overflow-hidden bg-stone-100 border-2 border-dashed border-orange-300 shrink-0 cursor-pointer">
+                  <img id="photo-preview-img" src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80" alt="Taom" class="w-full h-full object-cover" />
+                  <span class="absolute inset-x-0 bottom-0 bg-black/65 text-white text-[9px] font-bold text-center py-0.5">Rasm</span>
+                  <input type="file" id="m-food-photo-input" accept="image/*" onchange="handlePhotoFileUpload(event)" class="hidden" />
+                </label>
+                <div class="flex-1 min-w-0">
+                  <span class="text-[11px] font-bold text-slate-500 block mb-1.5">Rasm yuklang yoki tayyorini tanlang:</span>
+                  <div id="preset-photos-bar" class="grid grid-cols-6 gap-1"></div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <input type="text" id="m-food-name" required placeholder="Taom nomi (masalan: Tandir somsa)" class="w-full px-3 py-2.5 rounded-xl border border-stone-300 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-orange-500" />
+                <div class="relative">
+                  <input type="text" inputmode="numeric" id="m-food-price" required oninput="formatPriceInput(this)" placeholder="Narxi (masalan: 35 000)" class="w-full pl-3 pr-12 py-2.5 rounded-xl border border-stone-300 text-xs font-black focus:outline-none focus:ring-2 focus:ring-orange-500" />
+                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-bold text-slate-400">so'm</span>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <input type="text" id="m-shop-name" required placeholder="Oshxona / Pishiriq sexi nomi" class="w-full px-3 py-2.5 rounded-xl border border-stone-300 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-orange-500" />
+                <select id="m-food-category" required class="w-full px-3 py-2.5 rounded-xl border border-stone-300 text-xs font-semibold bg-white focus:outline-none focus:ring-2 focus:ring-orange-500">
+                  <option value="Milliy taomlar">Milliy taomlar</option>
+                  <option value="Shirinliklar">Shirinliklar</option>
+                  <option value="Issiq non">Issiq non</option>
+                  <option value="Fast-food">Fast-food</option>
+                </select>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2.5">
+                <select id="m-food-region" onchange="populateMerchantDistricts(this.value)" required class="w-full px-3 py-2.5 rounded-xl border border-stone-300 text-xs font-semibold bg-white focus:outline-none focus:ring-2 focus:ring-orange-500"></select>
+                <select id="m-food-district" required class="w-full px-3 py-2.5 rounded-xl border border-stone-300 text-xs font-semibold bg-white focus:outline-none focus:ring-2 focus:ring-orange-500"></select>
+              </div>
+
+              <button type="submit" class="w-full py-3 rounded-xl bg-orange-600 hover:bg-orange-700 text-white text-xs font-extrabold transition">
+                Vitrina'ga joylash
+              </button>
+            </form>
+          </div>
+
+          <!-- Kelib tushgan buyurtmalar -->
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between px-0.5">
+              <h2 class="text-sm font-black text-slate-900">Kelib tushgan buyurtmalar</h2>
+              <span id="merchant-orders-badge" class="text-[11px] font-bold text-emerald-700">0 ta</span>
+            </div>
+            <div id="merchant-orders-list" class="space-y-2.5"></div>
+          </div>
+
+          <!-- Tadbirkor mahsulotlari -->
+          <div class="space-y-2.5 pt-2">
+            <div class="flex items-center justify-between px-0.5">
+              <h2 class="text-sm font-black text-slate-900">Mening taomlarim</h2>
+              <span id="merchant-items-badge" class="text-[11px] font-bold text-slate-500">0 ta</span>
+            </div>
+            <div id="merchant-products-list" class="space-y-2"></div>
+          </div>
+        </section>
+
+        <!-- 3-ВКЛАДКА: ПЛАТФОРМА ФОЙДАСИ -->
+        <section id="view-admin" class="hidden space-y-3.5">
+          <div class="bg-slate-900 text-white rounded-2xl p-4 shadow-md space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-300">Platforma komissiyasi:</span>
+              <span id="commission-rate-display" class="px-2.5 py-0.5 rounded-lg bg-amber-400 text-slate-950 text-xs font-black">10%</span>
+            </div>
+            <input type="range" id="commission-slider" min="5" max="25" step="1" value="10" oninput="updatePlatformCommission(this.value)" class="w-full accent-amber-400 cursor-pointer" />
+
+            <div class="grid grid-cols-2 gap-2.5 pt-1">
+              <div class="bg-white/10 rounded-xl p-3">
+                <span class="text-[10px] font-bold uppercase text-slate-300 block">Umumiy aylanma</span>
+                <span id="admin-gmv" class="text-sm sm:text-base font-black text-white mt-0.5 block">0 so'm</span>
+              </div>
+              <div class="bg-emerald-600/30 border border-emerald-400/30 rounded-xl p-3">
+                <span class="text-[10px] font-bold uppercase text-emerald-200 block">Mening sof foydam</span>
+                <span id="admin-platform-profit" class="text-sm sm:text-base font-black text-amber-300 mt-0.5 block">0 so'm</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-stone-200 p-3.5 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <h2 class="text-sm font-black text-slate-900">So'nggi to'lovlar</h2>
+              <button type="button" onclick="resetAllDemoData()" class="text-[11px] font-bold text-slate-500 hover:text-slate-800 underline">
+                Tiklash
+              </button>
+            </div>
+            <div id="admin-payouts-list" class="divide-y divide-stone-100"></div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Floating Cart Bar inside Mini App Modal -->
+      <div id="floating-cart-bar" class="hidden absolute bottom-3 left-3.5 right-3.5 z-30">
+        <button type="button" onclick="openCartModal()" class="w-full py-3.5 px-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-extrabold text-sm shadow-xl flex items-center justify-between transition">
+          <span id="floating-cart-summary">Savat (0) • 0 so'm</span>
+          <span class="px-2.5 py-1 rounded-xl bg-white/20 text-xs font-black">Buyurtma berish →</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- BOTTOM-SHEET MODAL: 3 TA SODDA MAYDON + ONLAYN TO'LOV                 -->
+  <!-- ===================================================================== -->
+  <div id="cart-modal" class="hidden fixed inset-0 z-[60] bg-slate-900/60 backdrop-blur-xs flex items-end sm:items-center justify-center">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-4 sm:p-5 shadow-2xl max-h-[90vh] overflow-y-auto">
+      <div class="w-10 h-1 bg-stone-300 rounded-full mx-auto mb-3 sm:hidden"></div>
+
+      <div class="flex items-center justify-between pb-3 border-b border-stone-100">
+        <h3 class="text-base font-black text-slate-900">Buyurtmani rasmiylashtirish</h3>
+        <button type="button" onclick="closeCartModal()" class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div id="cart-items-container" class="mt-3 space-y-2 max-h-36 overflow-y-auto"></div>
+
+      <form id="checkout-form" onsubmit="processOnlinePaymentAndOrder(event)" class="mt-3.5 pt-3 border-t border-stone-100 space-y-3">
+        <div>
+          <label class="block text-xs font-extrabold text-slate-800 mb-1">1. Manzil (GPS orqali avtomatik)</label>
+          <input type="text" id="checkout-address" required readonly placeholder="Joylashuv aniqlanmoqda..." class="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 bg-stone-50 text-xs sm:text-sm font-semibold text-slate-800 focus:outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-extrabold text-slate-800 mb-1">2. Telefon raqam *</label>
+          <input type="tel" id="checkout-phone" required value="+998 " placeholder="+998 90 123 45 67" class="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-orange-500" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-extrabold text-slate-800 mb-1.5">3. To'lov turi *</label>
+          <div class="grid grid-cols-4 gap-1.5">
+            <label class="cursor-pointer">
+              <input type="radio" name="paymentProvider" value="Click" checked class="peer hidden" />
+              <div class="py-2.5 px-1 rounded-xl border-2 border-stone-200 peer-checked:border-sky-500 peer-checked:bg-sky-50 text-center transition">
+                <span class="block text-xs font-black text-sky-600">Click</span>
+              </div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="paymentProvider" value="Payme" class="peer hidden" />
+              <div class="py-2.5 px-1 rounded-xl border-2 border-stone-200 peer-checked:border-teal-500 peer-checked:bg-teal-50 text-center transition">
+                <span class="block text-xs font-black text-teal-600">Payme</span>
+              </div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="paymentProvider" value="Uzum Bank" class="peer hidden" />
+              <div class="py-2.5 px-1 rounded-xl border-2 border-stone-200 peer-checked:border-purple-600 peer-checked:bg-purple-50 text-center transition">
+                <span class="block text-[11px] font-black text-purple-700">Uzum</span>
+              </div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="paymentProvider" value="Paynet" class="peer hidden" />
+              <div class="py-2.5 px-1 rounded-xl border-2 border-stone-200 peer-checked:border-emerald-600 peer-checked:bg-emerald-50 text-center transition">
+                <span class="block text-xs font-black text-emerald-600">Paynet</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between text-xs bg-stone-50 px-3.5 py-2.5 rounded-xl border border-stone-200">
+          <span class="text-slate-600 font-semibold">Yetkazish (10 000 so'm) bilan jami:</span>
+          <span id="checkout-grand-total" class="text-sm font-black text-slate-900">0 so'm</span>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white text-sm font-black shadow-lg transition">
+          To'lash va buyurtma berish
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- JAVASCRIPT                                                            -->
+  <!-- ===================================================================== -->
+  <script>
+    const tgApp = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
+
+    function triggerHaptic(type, style = 'light') {
+      try {
+        if (!tgApp || !tgApp.HapticFeedback) return;
+        if (type === 'impact') tgApp.HapticFeedback.impactOccurred(style);
+        else if (type === 'notification') tgApp.HapticFeedback.notificationOccurred(style);
+        else if (type === 'selection') tgApp.HapticFeedback.selectionChanged();
+      } catch (err) {}
+    }
+
+    function applyTelegramThemeAndUser() {
+      const userLabelEl = document.getElementById('tg-user-label');
+      if (!tgApp) {
+        if (userLabelEl) userLabelEl.textContent = 'Telegram foydalanuvchisi (Brauzer)';
+        return;
+      }
+      try {
+        tgApp.ready();
+        tgApp.expand();
+        if (tgApp.setHeaderColor) {
+          tgApp.setHeaderColor(tgApp.colorScheme === 'dark' ? '#0f172a' : '#ffffff');
+        }
+        const u = tgApp.initDataUnsafe && tgApp.initDataUnsafe.user ? tgApp.initDataUnsafe.user : null;
+        if (u && userLabelEl) {
+          const fullName = [u.first_name, u.last_name].filter(Boolean).join(' ');
+          const handle = u.username ? ` (@${u.username})` : '';
+          userLabelEl.textContent = `${fullName || 'Telegram foydalanuvchisi'}${handle}`;
+        } else if (userLabelEl) {
+          userLabelEl.textContent = 'Telegram foydalanuvchisi';
+        }
+      } catch (err) {
+        if (userLabelEl) userLabelEl.textContent = 'Telegram foydalanuvchisi';
+      }
+    }
+
+    function shareMiniAppLink() {
+      triggerHaptic('impact', 'light');
+      const shareUrl = window.location.href && window.location.href.startsWith('http')
+        ? window.location.href
+        : 'https://t.me/TezTaomUzBot/app';
+      const shareText = "TezTaom Mini App — O'zbekiston bo'ylab taom va pishiriqlar buyurtmasi";
+      try {
+        if (tgApp && typeof tgApp.openTelegramLink === 'function') {
+          tgApp.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`);
+          return;
+        }
+      } catch (err) {}
+      if (navigator.share) {
+        navigator.share({ title: 'TezTaom Mini App', text: shareText, url: shareUrl }).catch(() => {});
+      } else {
+        showToast('Havola: t.me/TezTaomUzBot');
+      }
+    }
+
+    function openBotSupportChat() {
+      triggerHaptic('selection');
+      try {
+        if (tgApp && typeof tgApp.openTelegramLink === 'function') {
+          tgApp.openTelegramLink('https://t.me/TezTaomUzBot');
+          return;
+        }
+      } catch (err) {}
+      window.open('https://t.me/TezTaomUzBot', '_blank', 'noopener,noreferrer');
+    }
+
+    function isMiniAppOpen() {
+      const modal = document.getElementById('miniapp-modal');
+      return Boolean(modal && !modal.classList.contains('hidden'));
+    }
+
+    function openMiniAppWorkspace(initialRole = 'client', updateHash = true) {
+      triggerHaptic('impact', 'medium');
+      const modal = document.getElementById('miniapp-modal');
+      modal.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+
+      if (updateHash) {
+        try {
+          if (window.location.hash !== '#teztaom-mini-app') {
+            window.history.pushState({ miniAppOpen: true }, '', '#teztaom-mini-app');
+          }
+        } catch (err) {
+          window.location.hash = 'teztaom-mini-app';
+        }
+      }
+
+      switchRole(initialRole);
+      captureSilentLocation();
+      lucide.createIcons();
+    }
+
+    function closeMiniAppWorkspace(fromPopState = false) {
+      const modal = document.getElementById('miniapp-modal');
+      modal.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+
+      if (!fromPopState && window.location.hash === '#teztaom-mini-app') {
+        try {
+          window.history.back();
+        } catch (err) {
+          window.location.hash = '';
+        }
+      }
+      syncTelegramButtons();
+    }
+
+    function handleDeepLinkClick(event) {
+      if (event) event.preventDefault();
+      openMiniAppWorkspace('client', true);
+    }
+
+    function handleTelegramBackAction() {
+      const cartModal = document.getElementById('cart-modal');
+      if (cartModal && !cartModal.classList.contains('hidden')) {
+        closeCartModal();
+        return;
+      }
+      if (!isMiniAppOpen()) {
+        try {
+          if (tgApp && typeof tgApp.close === 'function') tgApp.close();
+        } catch (err) {}
+        return;
+      }
+      if (appState.currentRole !== 'client') {
+        switchRole('client');
+        return;
+      }
+      closeMiniAppWorkspace();
+    }
+
+    function syncTelegramButtons() {
+      const count = appState.cart.reduce((s, i) => s + i.qty, 0);
+      const subtotal = appState.cart.reduce((s, i) => s + i.price * i.qty, 0);
+      const cartOpen = !document.getElementById('cart-modal').classList.contains('hidden');
+      const miniOpen = isMiniAppOpen();
+
+      try {
+        if (tgApp && tgApp.BackButton) {
+          if (cartOpen || miniOpen) {
+            tgApp.BackButton.show();
+          } else {
+            tgApp.BackButton.hide();
+          }
+        }
+      } catch (err) {}
+
+      try {
+        if (!tgApp || !tgApp.MainButton) return;
+        if (miniOpen && appState.currentRole === 'client' && count > 0) {
+          if (cartOpen) {
+            tgApp.MainButton.setText(`To'lash • ${formatUZS(subtotal + 10000)}`);
+          } else {
+            tgApp.MainButton.setText(`Buyurtma berish (${count}) • ${formatUZS(subtotal)}`);
+          }
+          tgApp.MainButton.show();
+        } else {
+          tgApp.MainButton.hide();
+        }
+      } catch (err) {}
+    }
+
+    function initTelegramSdkListeners() {
+      if (!tgApp) return;
+      try {
+        if (tgApp.BackButton) {
+          tgApp.BackButton.onClick(handleTelegramBackAction);
+        }
+        if (tgApp.MainButton) {
+          tgApp.MainButton.onClick(() => {
+            const cartOpen = !document.getElementById('cart-modal').classList.contains('hidden');
+            if (!cartOpen) {
+              openCartModal();
+            } else {
+              const form = document.getElementById('checkout-form');
+              if (form && typeof form.requestSubmit === 'function') {
+                form.requestSubmit();
+              } else {
+                processOnlinePaymentAndOrder({ preventDefault: () => {} });
+              }
+            }
+          });
+        }
+        if (typeof tgApp.onEvent === 'function') {
+          tgApp.onEvent('themeChanged', applyTelegramThemeAndUser);
+          tgApp.onEvent('locationRequested', async (payload) => {
+            if (payload && typeof payload.latitude === 'number' && typeof payload.longitude === 'number') {
+              appState.silentCoords = { lat: payload.latitude, lng: payload.longitude };
+              const addr = await reverseGeocodeLocation(payload.latitude, payload.longitude);
+              applyAddressToCheckoutInput(addr);
+            }
+          });
+        }
+      } catch (err) {}
+    }
+
+    const UZBEKISTAN_REGIONS = {
+      'Samarqand viloyati': [
+        'Qo\'shrabot tumani', 'Samarqand shahri', 'Urgut tumani', 'Oqdaryo tumani',
+        'Ishtixon tumani', 'Kattaqo\'rg\'on shahri', 'Bulung\'ur tumani', 'Payariq tumani',
+        'Jomboy tumani', 'Narpay tumani', 'Pastdarg\'om tumani', 'Toyloq tumani'
+      ],
+      'Toshkent shahri': [
+        'Yunusobod tumani', 'Chilonzor tumani', 'Mirzo Ulug\'bek tumani', 'Yakkasaroy tumani',
+        'Sergeli tumani', 'Shayxontohur tumani', 'Olmazor tumani', 'Yashnobod tumani',
+        'Mirobod tumani', 'Uchtepa tumani'
+      ],
+      'Toshkent viloyati': [
+        'Chirchiq shahri', 'Olmaliq shahri', 'Angren shahri', 'Yangiyo\'l tumani',
+        'Zangiota tumani', 'Qibray tumani', 'Bo\'stonliq tumani', 'Parkent tumani'
+      ],
+      'Buxoro viloyati': [
+        'Buxoro shahri', 'G\'ijduvon tumani', 'Kogon shahri', 'Jondor tumani',
+        'Romitan tumani', 'Shofirkon tumani', 'Vobkent tumani'
+      ],
+      'Farg\'ona viloyati': [
+        'Farg\'ona shahri', 'Qo\'qon shahri', 'Marg\'ilon shahri', 'Quva tumani',
+        'Rishton tumani', 'Oltiariq tumani', 'Bag\'dod tumani'
+      ],
+      'Andijon viloyati': [
+        'Andijon shahri', 'Asaka tumani', 'Shahrixon tumani', 'Xonobod shahri',
+        'Baliqchi tumani', 'Marhamat tumani', 'Paxtaobod tumani'
+      ],
+      'Namangan viloyati': [
+        'Namangan shahri', 'Chust tumani', 'Pop tumani', 'To\'raqo\'rg\'on tumani',
+        'Uchqo\'rg\'on tumani', 'Chortoq tumani', 'Kosonsoy tumani'
+      ],
+      'Qashqadaryo viloyati': [
+        'Qarshi shahri', 'Shahrisabz shahri', 'Kitob tumani', 'Koson tumani',
+        'G\'uzor tumani', 'Muborak tumani', 'Chiroqchi tumani'
+      ],
+      'Surxondaryo viloyati': [
+        'Termiz shahri', 'Denov tumani', 'Sho\'rchi tumani', 'Boysun tumani',
+        'Jarqo\'rg\'on tumani', 'Qumqo\'rg\'on tumani'
+      ],
+      'Jizzax viloyati': [
+        'Jizzax shahri', 'Zomin tumani', 'G\'allaorol tumani', 'Paxtakor tumani', 'Do\'stlik tumani'
+      ],
+      'Sirdaryo viloyati': [
+        'Guliston shahri', 'Yangiyer shahri', 'Sirdaryo tumani', 'Boyovut tumani'
+      ],
+      'Xorazm viloyati': [
+        'Urganch shahri', 'Xiva shahri', 'Xonqa tumani', 'Shovot tumani', 'Bog\'ot tumani'
+      ],
+      'Navoiy viloyati': [
+        'Navoiy shahri', 'Zarafshon shahri', 'Nurota tumani', 'Karmana tumani', 'Qiziltepa tumani'
+      ],
+      'Qoraqalpog\'iston Respublikasi': [
+        'Nukus shahri', 'Beruniy tumani', 'To\'rtko\'l tumani', 'Xo\'jayli tumani', 'Qo\'ng\'irot tumani'
+      ]
+    };
+
+    const FOOD_CATEGORIES = [
+      { id: 'Hammasi', label: 'Hammasi' },
+      { id: 'Milliy taomlar', label: '🍲 Milliy taomlar' },
+      { id: 'Shirinliklar', label: '🎂 Shirinliklar' },
+      { id: 'Issiq non', label: '🫓 Issiq non' },
+      { id: 'Fast-food', label: '🍕 Fast-food' }
+    ];
+
+    const PRESET_FOOD_PHOTOS = [
+      { label: 'Somsa', url: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80' },
+      { label: 'Osh', url: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=600&q=80' },
+      { label: 'Shashlik', url: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=600&q=80' },
+      { label: 'Tort', url: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80' },
+      { label: 'Non', url: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80' },
+      { label: 'Pitsa', url: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=80' }
+    ];
+
+    const INITIAL_PRODUCTS = [
+      {
+        id: 'p1',
+        shopName: 'Qo\'shrabot Tandir Somsa',
+        name: 'Qo\'y go\'shtli tandir somsa (3 dona)',
+        photo: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80',
+        category: 'Milliy taomlar',
+        region: 'Samarqand viloyati',
+        district: 'Qo\'shrabot tumani',
+        price: 36000,
+        inStock: true
+      },
+      {
+        id: 'p2',
+        shopName: 'Qo\'shrabot Pishiriqlari',
+        name: 'Medovik torti (1 kg)',
+        photo: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80',
+        category: 'Shirinliklar',
+        region: 'Samarqand viloyati',
+        district: 'Qo\'shrabot tumani',
+        price: 75000,
+        inStock: true
+      },
+      {
+        id: 'p3',
+        shopName: 'Registon Zig\'ir Oshi',
+        name: 'Samarqand to\'y oshi (porsiya)',
+        photo: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=600&q=80',
+        category: 'Milliy taomlar',
+        region: 'Samarqand viloyati',
+        district: 'Samarqand shahri',
+        price: 42000,
+        inStock: true
+      },
+      {
+        id: 'p4',
+        shopName: 'Samarqand Patir Uyi',
+        name: 'Issiq Samarqand patiri (3 dona)',
+        photo: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80',
+        category: 'Issiq non',
+        region: 'Samarqand viloyati',
+        district: 'Samarqand shahri',
+        price: 27000,
+        inStock: true
+      },
+      {
+        id: 'p5',
+        shopName: 'Urgut Tandir Kabob',
+        name: 'Qo\'y go\'shtli shashlik set',
+        photo: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=600&q=80',
+        category: 'Milliy taomlar',
+        region: 'Samarqand viloyati',
+        district: 'Urgut tumani',
+        price: 55000,
+        inStock: true
+      },
+      {
+        id: 'p6',
+        shopName: 'Yunusobod Osh Markazi',
+        name: 'Toshkent bayram oshi va qazi',
+        photo: 'https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=600&q=80',
+        category: 'Milliy taomlar',
+        region: 'Toshkent shahri',
+        district: 'Yunusobod tumani',
+        price: 46000,
+        inStock: true
+      },
+      {
+        id: 'p7',
+        shopName: 'Chilonzor Qandolat',
+        name: 'Shokoladli tort va kruassan',
+        photo: 'https://images.unsplash.com/photo-1519676867240-f03562e64548?auto=format&fit=crop&w=600&q=80',
+        category: 'Shirinliklar',
+        region: 'Toshkent shahri',
+        district: 'Chilonzor tumani',
+        price: 68000,
+        inStock: true
+      },
+      {
+        id: 'p8',
+        shopName: 'Buxoro Pitsa & Somsa',
+        name: 'Assorti issiq pitsa (32 sm)',
+        photo: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=80',
+        category: 'Fast-food',
+        region: 'Buxoro viloyati',
+        district: 'Buxoro shahri',
+        price: 58000,
+        inStock: true
+      }
+    ];
+
+    const INITIAL_ORDERS = [
+      {
+        id: 'TT-4102',
+        customerPhone: '+998 93 310 44 21',
+        district: 'Qo\'shrabot tumani',
+        address: 'Mustaqillik ko\'chasi, 14-uy',
+        lat: 40.2665,
+        lng: 66.6812,
+        paymentMethod: 'Click',
+        shopName: 'Qo\'shrabot Tandir Somsa',
+        itemsSummary: 'Qo\'y go\'shtli tandir somsa × 2',
+        totalAmount: 82000,
+        statusStep: 0,
+        createdAt: '12:15'
+      },
+      {
+        id: 'TT-4103',
+        customerPhone: '+998 90 512 88 09',
+        district: 'Samarqand shahri',
+        address: 'Bo\'stonsaroy ko\'chasi, 22-uy',
+        lat: 39.6580,
+        lng: 66.9690,
+        paymentMethod: 'Payme',
+        shopName: 'Registon Zig\'ir Oshi',
+        itemsSummary: 'Samarqand to\'y oshi × 2',
+        totalAmount: 94000,
+        statusStep: 1,
+        createdAt: '12:40'
+      }
+    ];
+
+    let appState = {
+      products: [],
+      orders: [],
+      cart: [],
+      commissionRate: 10,
+      selectedRegion: 'Barcha viloyatlar',
+      selectedDistrict: 'Barcha tumanlar',
+      selectedKitchenFilter: null,
+      selectedCategory: 'Hammasi',
+      currentRole: 'client',
+      silentCoords: null,
+      detectedAddress: '',
+      uploadedPhotoDataUrl: PRESET_FOOD_PHOTOS[0].url
+    };
+
+    function loadAppState() {
+      try {
+        const p = localStorage.getItem('teztaom_mobile_products');
+        const o = localStorage.getItem('teztaom_mobile_orders');
+        const r = localStorage.getItem('teztaom_mobile_commission');
+        appState.products = p ? JSON.parse(p) : [...INITIAL_PRODUCTS];
+        appState.orders = o ? JSON.parse(o) : [...INITIAL_ORDERS];
+        appState.commissionRate = r ? Number(r) : 10;
+      } catch (e) {
+        appState.products = [...INITIAL_PRODUCTS];
+        appState.orders = [...INITIAL_ORDERS];
+      }
+    }
+
+    function saveAppState() {
+      try {
+        localStorage.setItem('teztaom_mobile_products', JSON.stringify(appState.products));
+        localStorage.setItem('teztaom_mobile_orders', JSON.stringify(appState.orders));
+        localStorage.setItem('teztaom_mobile_commission', String(appState.commissionRate));
+      } catch (e) {}
+    }
+
+    function formatUZS(num) {
+      return Math.round(Number(num) || 0).toLocaleString('ru-RU') + ' so\'m';
+    }
+
+    function formatPriceInput(input) {
+      const digits = input.value.replace(/\D/g, '');
+      input.value = digits ? Number(digits).toLocaleString('ru-RU') : '';
+    }
+
+    function parseFormattedPrice(str) {
+      return Number(String(str).replace(/\D/g, '')) || 0;
+    }
+
+    function showToast(msg) {
+      const container = document.getElementById('toast-container');
+      const el = document.createElement('div');
+      el.className = 'pointer-events-auto px-4 py-2.5 rounded-2xl bg-slate-900 text-white shadow-xl text-xs font-bold text-center transition-opacity duration-300';
+      el.textContent = msg;
+      container.appendChild(el);
+      setTimeout(() => {
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 250);
+      }, 2400);
+    }
+
+    function buildFallbackLocationText(lat, lng) {
+      const districtPart =
+        appState.selectedDistrict && appState.selectedDistrict !== 'Barcha tumanlar'
+          ? appState.selectedDistrict
+          : (appState.selectedRegion && appState.selectedRegion !== 'Barcha viloyatlar'
+              ? appState.selectedRegion
+              : 'O\'zbekiston');
+      return `${districtPart} (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
+    }
+
+    async function reverseGeocodeLocation(lat, lng) {
+      try {
+        const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lng)}&zoom=18&addressdetails=1&accept-language=uz,ru,en`;
+        const response = await fetch(url, {
+          headers: { 'Accept': 'application/json' }
+        });
+        if (!response.ok) throw new Error('Geocoding failed');
+        const data = await response.json();
+        const addr = data && data.address ? data.address : {};
+
+        const road = addr.road || addr.pedestrian || addr.footway || addr.street || '';
+        const houseNumber = addr.house_number || '';
+        const neighbourhood = addr.neighbourhood || addr.suburb || addr.quarter || addr.village || addr.hamlet || '';
+        const cityOrDistrict = addr.city || addr.town || addr.county || addr.district || '';
+
+        const parts = [];
+        const streetFull = [road, houseNumber].filter(Boolean).join(', ');
+        if (streetFull) parts.push(streetFull);
+        if (neighbourhood && neighbourhood !== road) parts.push(neighbourhood);
+        if (cityOrDistrict && !parts.includes(cityOrDistrict)) parts.push(cityOrDistrict);
+
+        return parts.length > 0 ? parts.join(', ') : buildFallbackLocationText(lat, lng);
+      } catch (err) {
+        return buildFallbackLocationText(lat, lng);
+      }
+    }
+
+    function applyAddressToCheckoutInput(addressText) {
+      appState.detectedAddress = addressText;
+      const input = document.getElementById('checkout-address');
+      if (input && addressText) {
+        input.value = addressText;
+      }
+    }
+
+    function captureSilentLocation() {
+      if (appState.detectedAddress) {
+        applyAddressToCheckoutInput(appState.detectedAddress);
+      }
+
+      try {
+        if (tgApp && typeof tgApp.requestLocation === 'function') {
+          tgApp.requestLocation();
+        }
+      } catch (err) {}
+
+      if (!('geolocation' in navigator)) {
+        if (!appState.detectedAddress) {
+          applyAddressToCheckoutInput(buildFallbackLocationText(40.2665, 66.6812));
+        }
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+          appState.silentCoords = { lat, lng };
+          const resolvedAddress = await reverseGeocodeLocation(lat, lng);
+          applyAddressToCheckoutInput(resolvedAddress);
+        },
+        () => {
+          const fallbackLat = appState.silentCoords ? appState.silentCoords.lat : 40.2665;
+          const fallbackLng = appState.silentCoords ? appState.silentCoords.lng : 66.6812;
+          if (!appState.detectedAddress) {
+            applyAddressToCheckoutInput(buildFallbackLocationText(fallbackLat, fallbackLng));
+          }
+        },
+        { enableHighAccuracy: true, timeout: 6000, maximumAge: 60000 }
+      );
+    }
+
+    function populateRegionDistrictDropdowns() {
+      const regionSelect = document.getElementById('header-region-select');
+      const merchantRegionSelect = document.getElementById('m-food-region');
+      const regions = Object.keys(UZBEKISTAN_REGIONS);
+
+      regionSelect.innerHTML =
+        `<option value="Barcha viloyatlar">Barcha viloyatlar</option>` +
+        regions.map(r => `<option value="${r}">${r}</option>`).join('');
+
+      merchantRegionSelect.innerHTML = regions
+        .map(r => `<option value="${r}" ${r === 'Samarqand viloyati' ? 'selected' : ''}>${r}</option>`)
+        .join('');
+
+      populateDistrictDropdown('Barcha viloyatlar');
+      populateMerchantDistricts('Samarqand viloyati');
+    }
+
+    function populateDistrictDropdown(regionName) {
+      const districtSelect = document.getElementById('header-district-select');
+      if (regionName === 'Barcha viloyatlar' || !UZBEKISTAN_REGIONS[regionName]) {
+        districtSelect.innerHTML = `<option value="Barcha tumanlar">Barcha tumanlar</option>`;
+        appState.selectedDistrict = 'Barcha tumanlar';
+        return;
+      }
+      const districts = UZBEKISTAN_REGIONS[regionName];
+      districtSelect.innerHTML =
+        `<option value="Barcha tumanlar">Barcha tuman/shahar</option>` +
+        districts.map(d => `<option value="${d}">${d}</option>`).join('');
+      appState.selectedDistrict = 'Barcha tumanlar';
+    }
+
+    function populateMerchantDistricts(regionName) {
+      const mDistrict = document.getElementById('m-food-district');
+      const districts = UZBEKISTAN_REGIONS[regionName] || ['Markaziy tuman'];
+      mDistrict.innerHTML = districts.map(d => `<option value="${d}">${d}</option>`).join('');
+    }
+
+    function handleRegionChange(regionName) {
+      appState.selectedRegion = regionName;
+      appState.selectedKitchenFilter = null;
+      populateDistrictDropdown(regionName);
+      refreshClientCatalog();
+    }
+
+    function handleDistrictChange(districtName) {
+      appState.selectedDistrict = districtName;
+      appState.selectedKitchenFilter = null;
+      refreshClientCatalog();
+    }
+
+    function resetAllLocationFilters() {
+      appState.selectedRegion = 'Barcha viloyatlar';
+      appState.selectedDistrict = 'Barcha tumanlar';
+      appState.selectedKitchenFilter = null;
+      appState.selectedCategory = 'Hammasi';
+      document.getElementById('header-region-select').value = 'Barcha viloyatlar';
+      populateDistrictDropdown('Barcha viloyatlar');
+      document.getElementById('food-search-input').value = '';
+      renderFoodCategories();
+      refreshClientCatalog();
+    }
+
+    function switchRole(role) {
+      triggerHaptic('selection');
+      appState.currentRole = role;
+      ['client', 'merchant', 'admin'].forEach(r => {
+        const view = document.getElementById(`view-${r}`);
+        const btn = document.getElementById(`role-btn-${r}`);
+        if (r === role) {
+          view.classList.remove('hidden');
+          btn.className = 'px-2.5 py-1.5 rounded-lg text-xs font-extrabold transition bg-slate-900 text-white shadow-xs';
+        } else {
+          view.classList.add('hidden');
+          btn.className = 'px-2.5 py-1.5 rounded-lg text-xs font-extrabold transition text-slate-600 hover:text-slate-900';
+        }
+      });
+      updateCartBadges();
+      if (role === 'client') refreshClientCatalog();
+      if (role === 'merchant') renderMerchantCabinet();
+      if (role === 'admin') renderAdminProfitDashboard();
+      syncTelegramButtons();
+    }
+
+    function renderFoodCategories() {
+      const bar = document.getElementById('food-categories-bar');
+      bar.innerHTML = FOOD_CATEGORIES.map(cat => {
+        const active = appState.selectedCategory === cat.id;
+        return `
+          <button type="button" onclick="selectFoodCategory('${cat.id}')" class="px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition shrink-0 ${
+            active
+              ? 'bg-orange-600 text-white shadow-xs'
+              : 'bg-white text-slate-700 border border-stone-200'
+          }">
+            ${cat.label}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectFoodCategory(catId) {
+      appState.selectedCategory = catId;
+      renderFoodCategories();
+      refreshClientCatalog();
+    }
+
+    function toggleKitchenChip(shopName) {
+      appState.selectedKitchenFilter = appState.selectedKitchenFilter === shopName ? null : shopName;
+      refreshClientCatalog();
+    }
+
+    function refreshClientCatalog() {
+      const kitchens = [...new Set(
+        appState.products
+          .filter(p =>
+            (appState.selectedRegion === 'Barcha viloyatlar' || p.region === appState.selectedRegion) &&
+            (appState.selectedDistrict === 'Barcha tumanlar' || p.district === appState.selectedDistrict)
+          )
+          .map(p => p.shopName)
+      )];
+
+      const merchantsBar = document.getElementById('district-merchants-bar');
+      if (kitchens.length > 0) {
+        merchantsBar.innerHTML = kitchens.map(shop => {
+          const active = appState.selectedKitchenFilter === shop;
+          return `
+            <button type="button" onclick="toggleKitchenChip('${shop.replace(/'/g, "\\'")}')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap transition shrink-0 border ${
+              active
+                ? 'bg-slate-900 text-amber-300 border-slate-900'
+                : 'bg-stone-200/70 text-slate-700 border-transparent hover:bg-stone-200'
+            }">
+              🏪 ${shop}
+            </button>
+          `;
+        }).join('');
+      } else {
+        merchantsBar.innerHTML = '';
+      }
+
+      const query = document.getElementById('food-search-input').value.trim().toLowerCase();
+      const filtered = appState.products.filter(item => {
+        const matchRegion = appState.selectedRegion === 'Barcha viloyatlar' || item.region === appState.selectedRegion;
+        const matchDistrict = appState.selectedDistrict === 'Barcha tumanlar' || item.district === appState.selectedDistrict;
+        const matchKitchen = !appState.selectedKitchenFilter || item.shopName === appState.selectedKitchenFilter;
+        const matchCat = appState.selectedCategory === 'Hammasi' || item.category === appState.selectedCategory;
+        const matchQuery =
+          !query ||
+          item.name.toLowerCase().includes(query) ||
+          item.shopName.toLowerCase().includes(query);
+        return matchRegion && matchDistrict && matchKitchen && matchCat && matchQuery;
+      });
+
+      const grid = document.getElementById('food-grid');
+      const empty = document.getElementById('catalog-empty');
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+
+      empty.classList.add('hidden');
+      grid.innerHTML = filtered.map(item => {
+        const inCart = appState.cart.find(c => c.id === item.id);
+        const available = item.inStock !== false;
+
+        return `
+          <article class="bg-white rounded-2xl border border-stone-200/90 overflow-hidden shadow-2xs flex flex-col justify-between ${!available ? 'opacity-60' : ''}">
+            <div>
+              <div class="relative aspect-[4/3] bg-stone-100 overflow-hidden">
+                <img
+                  src="${item.photo}"
+                  alt="${item.name}"
+                  onerror="this.src='https://placehold.co/400x300/ffedd5/ea580c?text=TezTaom'"
+                  class="w-full h-full object-cover"
+                />
+                <span class="absolute bottom-1.5 left-1.5 px-2 py-0.5 rounded-md bg-black/65 backdrop-blur-xs text-[10px] font-bold text-white truncate max-w-[90%]">
+                  ${item.district}
+                </span>
+              </div>
+
+              <div class="p-2.5 pb-1.5">
+                <p class="text-[10px] font-bold text-orange-600 truncate">${item.shopName}</p>
+                <h3 class="text-xs sm:text-sm font-extrabold text-slate-900 leading-snug line-clamp-2 mt-0.5">${item.name}</h3>
+              </div>
+            </div>
+
+            <div class="p-2.5 pt-1 space-y-2">
+              <span class="block text-xs sm:text-sm font-black text-slate-900">${formatUZS(item.price)}</span>
+              ${!available ? `
+                <button type="button" disabled class="w-full py-2 rounded-xl bg-stone-200 text-slate-500 text-xs font-bold">Tugadi</button>
+              ` : inCart ? `
+                <div class="w-full flex items-center justify-between bg-orange-600 text-white rounded-xl p-1">
+                  <button type="button" onclick="changeCartQty('${item.id}', -1)" class="w-7 h-7 rounded-lg bg-white/20 active:bg-white/30 font-black text-sm">−</button>
+                  <span class="text-xs font-black">${inCart.qty}</span>
+                  <button type="button" onclick="changeCartQty('${item.id}', 1)" class="w-7 h-7 rounded-lg bg-white/20 active:bg-white/30 font-black text-sm">+</button>
+                </div>
+              ` : `
+                <button type="button" onclick="addToCart('${item.id}')" class="w-full py-2 rounded-xl bg-stone-100 hover:bg-orange-600 active:bg-orange-600 text-slate-900 hover:text-white active:text-white text-xs font-extrabold transition">
+                  + Qo'shish
+                </button>
+              `}
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function addToCart(productId) {
+      const prod = appState.products.find(p => p.id === productId);
+      if (!prod || prod.inStock === false) return;
+      triggerHaptic('impact', 'light');
+      const found = appState.cart.find(c => c.id === productId);
+      if (found) found.qty += 1;
+      else appState.cart.push({ ...prod, qty: 1 });
+      updateCartBadges();
+      refreshClientCatalog();
+      syncTelegramButtons();
+    }
+
+    function changeCartQty(productId, delta) {
+      triggerHaptic('selection');
+      const idx = appState.cart.findIndex(c => c.id === productId);
+      if (idx === -1) return;
+      appState.cart[idx].qty += delta;
+      if (appState.cart[idx].qty <= 0) appState.cart.splice(idx, 1);
+      updateCartBadges();
+      refreshClientCatalog();
+      syncTelegramButtons();
+      if (!document.getElementById('cart-modal').classList.contains('hidden')) {
+        if (appState.cart.length === 0) closeCartModal();
+        else renderCartModalItems();
+      }
+    }
+
+    function updateCartBadges() {
+      const count = appState.cart.reduce((s, i) => s + i.qty, 0);
+      const subtotal = appState.cart.reduce((s, i) => s + i.price * i.qty, 0);
+      const bar = document.getElementById('floating-cart-bar');
+
+      if (count > 0 && isMiniAppOpen() && appState.currentRole === 'client') {
+        bar.classList.remove('hidden');
+        document.getElementById('floating-cart-summary').textContent = `Savat (${count}) • ${formatUZS(subtotal)}`;
+      } else {
+        bar.classList.add('hidden');
+      }
+      syncTelegramButtons();
+    }
+
+    function openCartModal() {
+      if (appState.cart.length === 0) return;
+      triggerHaptic('impact', 'medium');
+      renderCartModalItems();
+      const addrInput = document.getElementById('checkout-address');
+      if (appState.detectedAddress) {
+        addrInput.value = appState.detectedAddress;
+      } else if (!addrInput.value) {
+        addrInput.value = buildFallbackLocationText(40.2665, 66.6812);
+      }
+      captureSilentLocation();
+      document.getElementById('cart-modal').classList.remove('hidden');
+      syncTelegramButtons();
+      lucide.createIcons();
+    }
+
+    function closeCartModal() {
+      document.getElementById('cart-modal').classList.add('hidden');
+      syncTelegramButtons();
+    }
+
+    function renderCartModalItems() {
+      const deliveryFee = 10000;
+      const subtotal = appState.cart.reduce((s, i) => s + i.price * i.qty, 0);
+      document.getElementById('cart-items-container').innerHTML = appState.cart.map(item => `
+        <div class="flex items-center justify-between gap-2 p-2 rounded-xl bg-stone-50 border border-stone-200">
+          <div class="min-w-0">
+            <p class="text-xs font-extrabold text-slate-900 truncate">${item.name}</p>
+            <p class="text-[11px] text-slate-500">${formatUZS(item.price)}</p>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button type="button" onclick="changeCartQty('${item.id}', -1)" class="w-7 h-7 rounded-lg bg-white border border-stone-300 font-bold text-xs">−</button>
+            <span class="text-xs font-black w-4 text-center">${item.qty}</span>
+            <button type="button" onclick="changeCartQty('${item.id}', 1)" class="w-7 h-7 rounded-lg bg-orange-600 text-white font-bold text-xs">+</button>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('checkout-grand-total').textContent = formatUZS(subtotal + deliveryFee);
+    }
+
+    function processOnlinePaymentAndOrder(e) {
+      e.preventDefault();
+      if (appState.cart.length === 0) return;
+
+      const paymentMethod = document.querySelector('input[name="paymentProvider"]:checked').value;
+      const subtotal = appState.cart.reduce((s, i) => s + i.price * i.qty, 0);
+      const totalAmount = subtotal + 10000;
+      const shopNames = [...new Set(appState.cart.map(i => i.shopName))].join(', ');
+      const itemsSummary = appState.cart.map(i => `${i.name} × ${i.qty}`).join(', ');
+      const address = document.getElementById('checkout-address').value.trim();
+      const phone = document.getElementById('checkout-phone').value.trim();
+
+      const district =
+        appState.selectedDistrict !== 'Barcha tumanlar'
+          ? appState.selectedDistrict
+          : appState.cart[0]?.district || 'Qo\'shrabot tumani';
+
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+      const newOrder = {
+        id: 'TT-' + Math.floor(1000 + Math.random() * 9000),
+        customerPhone: phone,
+        district,
+        address,
+        lat: appState.silentCoords ? appState.silentCoords.lat : null,
+        lng: appState.silentCoords ? appState.silentCoords.lng : null,
+        paymentMethod,
+        shopName: shopNames,
+        itemsSummary,
+        totalAmount,
+        statusStep: 0,
+        createdAt: timeStr
+      };
+
+      appState.orders.unshift(newOrder);
+      appState.cart = [];
+      saveAppState();
+      updateCartBadges();
+      closeCartModal();
+      refreshClientCatalog();
+      syncTelegramButtons();
+      triggerHaptic('notification', 'success');
+      showToast(`Buyurtma qabul qilindi! (${paymentMethod} • ${formatUZS(totalAmount)})`);
+    }
+
+    function toggleAddDishForm() {
+      const card = document.getElementById('merchant-add-card');
+      card.classList.toggle('hidden');
+      lucide.createIcons();
+    }
+
+    function renderPresetPhotos() {
+      const bar = document.getElementById('preset-photos-bar');
+      bar.innerHTML = PRESET_FOOD_PHOTOS.map(p => `
+        <button type="button" onclick="selectPresetPhoto('${p.url}')" class="rounded-lg overflow-hidden border border-stone-200 hover:border-orange-500 aspect-square bg-stone-100">
+          <img src="${p.url}" alt="${p.label}" class="w-full h-full object-cover" />
+        </button>
+      `).join('');
+    }
+
+    function selectPresetPhoto(url) {
+      appState.uploadedPhotoDataUrl = url;
+      document.getElementById('photo-preview-img').src = url;
+    }
+
+    function handlePhotoFileUpload(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const maxW = 600;
+          const scale = img.width > maxW ? maxW / img.width : 1;
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+          canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+          appState.uploadedPhotoDataUrl = dataUrl;
+          document.getElementById('photo-preview-img').src = dataUrl;
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleAddFoodProduct(e) {
+      e.preventDefault();
+      const price = parseFormattedPrice(document.getElementById('m-food-price').value);
+      if (price < 1000) {
+        showToast('Narx kamida 1 000 so\'m bo\'lsin');
+        return;
+      }
+
+      const newProd = {
+        id: 'p-' + Date.now(),
+        shopName: document.getElementById('m-shop-name').value.trim(),
+        name: document.getElementById('m-food-name').value.trim(),
+        photo: appState.uploadedPhotoDataUrl || PRESET_FOOD_PHOTOS[0].url,
+        category: document.getElementById('m-food-category').value,
+        region: document.getElementById('m-food-region').value,
+        district: document.getElementById('m-food-district').value,
+        price,
+        inStock: true
+      };
+
+      appState.products.unshift(newProd);
+      saveAppState();
+      document.getElementById('m-food-name').value = '';
+      document.getElementById('m-food-price').value = '';
+      document.getElementById('merchant-add-card').classList.add('hidden');
+      showToast('Taom vitrinaga qo\'shildi!');
+      renderMerchantCabinet();
+    }
+
+    function toggleMerchantStock(id) {
+      const p = appState.products.find(x => x.id === id);
+      if (!p) return;
+      p.inStock = p.inStock === false ? true : false;
+      saveAppState();
+      renderMerchantCabinet();
+    }
+
+    function deleteMerchantProduct(id) {
+      appState.products = appState.products.filter(x => x.id !== id);
+      appState.cart = appState.cart.filter(x => x.id !== id);
+      saveAppState();
+      updateCartBadges();
+      renderMerchantCabinet();
+      showToast('O\'chirildi');
+    }
+
+    function cycleOrderStatus(orderId) {
+      const ord = appState.orders.find(o => o.id === orderId);
+      if (!ord) return;
+      ord.statusStep = (ord.statusStep + 1) % 3;
+      saveAppState();
+      renderMerchantCabinet();
+    }
+
+    function renderMerchantCabinet() {
+      const merchantPct = 100 - appState.commissionRate;
+      document.getElementById('merchant-share-percent').textContent = merchantPct;
+      const gmv = appState.orders.reduce((s, o) => s + o.totalAmount, 0);
+      document.getElementById('merchant-net-earnings').textContent = formatUZS(Math.round(gmv * (merchantPct / 100)));
+
+      document.getElementById('merchant-orders-badge').textContent = `${appState.orders.length} ta`;
+      const statusBadges = [
+        { label: 'Qabul qilindi', cls: 'bg-amber-100 text-amber-800' },
+        { label: 'Yo\'lda', cls: 'bg-sky-100 text-sky-800' },
+        { label: 'Yetkazildi', cls: 'bg-emerald-100 text-emerald-800' }
+      ];
+
+      document.getElementById('merchant-orders-list').innerHTML = appState.orders.map(ord => {
+        const net = Math.round(ord.totalAmount * (merchantPct / 100));
+        const st = statusBadges[ord.statusStep % 3];
+        const hasCoords = typeof ord.lat === 'number' && typeof ord.lng === 'number' && !Number.isNaN(ord.lat);
+        const searchQuery = encodeURIComponent(`${ord.district || ''}, ${ord.address}`);
+
+        const yandexNavUrl = hasCoords
+          ? `https://yandex.uz/maps/?rtext=~${ord.lat.toFixed(5)},${ord.lng.toFixed(5)}&rtt=auto`
+          : `https://yandex.uz/maps/?text=${searchQuery}`;
+
+        const googleMapsUrl = hasCoords
+          ? `https://www.google.com/maps/dir/?api=1&destination=${ord.lat.toFixed(5)},${ord.lng.toFixed(5)}`
+          : `https://www.google.com/maps/search/?api=1&query=${searchQuery}`;
+
+        const cleanTel = String(ord.customerPhone || '').replace(/\s+/g, '');
+
+        return `
+          <div class="bg-white rounded-2xl border border-stone-200 p-3.5 shadow-2xs space-y-2.5">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-black text-slate-900">#${ord.id}</span>
+                <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md">${ord.paymentMethod}</span>
+                <span class="text-[11px] text-slate-400">${ord.createdAt || ''}</span>
+              </div>
+              <button type="button" onclick="cycleOrderStatus('${ord.id}')" class="px-2.5 py-1 rounded-lg text-[11px] font-extrabold ${st.cls}">
+                ${st.label} ↻
+              </button>
+            </div>
+
+            <div>
+              <p class="text-xs sm:text-sm font-extrabold text-slate-900">${ord.itemsSummary}</p>
+              <p class="text-xs text-slate-600 mt-0.5">📍 ${ord.district ? ord.district + ', ' : ''}${ord.address}</p>
+            </div>
+
+            <div class="flex items-center justify-between pt-1">
+              <a href="tel:${cleanTel}" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-xs font-extrabold text-slate-900">
+                📞 ${ord.customerPhone}
+              </a>
+              <span class="text-xs font-black text-emerald-700">+${formatUZS(net)}</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 pt-1">
+              <a href="${yandexNavUrl}" target="_blank" rel="noopener noreferrer" class="py-2.5 px-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-black text-center transition">
+                🧭 Yandex Navigator
+              </a>
+              <a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer" class="py-2.5 px-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold text-center transition">
+                📍 Google Maps
+              </a>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('merchant-items-badge').textContent = `${appState.products.length} ta`;
+      document.getElementById('merchant-products-list').innerHTML = appState.products.map(p => `
+        <div class="flex items-center justify-between gap-2.5 p-2.5 rounded-2xl border border-stone-200 bg-white">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <img src="${p.photo}" alt="${p.name}" class="w-11 h-11 rounded-xl object-cover shrink-0" />
+            <div class="min-w-0">
+              <h4 class="text-xs font-extrabold text-slate-900 truncate">${p.name}</h4>
+              <p class="text-[11px] font-bold text-slate-500 truncate">${formatUZS(p.price)} • ${p.district}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button type="button" onclick="toggleMerchantStock('${p.id}')" class="px-2 py-1 rounded-lg text-[11px] font-extrabold ${p.inStock !== false ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-700'}">
+              ${p.inStock !== false ? 'Bor' : 'Tugadi'}
+            </button>
+            <button type="button" onclick="deleteMerchantProduct('${p.id}')" class="p-1.5 rounded-lg bg-stone-100 text-slate-500 hover:text-red-600">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    function updatePlatformCommission(val) {
+      appState.commissionRate = Number(val);
+      document.getElementById('commission-rate-display').textContent = `${appState.commissionRate}%`;
+      saveAppState();
+      renderAdminProfitDashboard();
+    }
+
+    function renderAdminProfitDashboard() {
+      const rate = appState.commissionRate;
+      document.getElementById('commission-slider').value = rate;
+      document.getElementById('commission-rate-display').textContent = `${rate}%`;
+
+      const gmv = appState.orders.reduce((s, o) => s + o.totalAmount, 0);
+      const myProfit = Math.round(gmv * (rate / 100));
+
+      document.getElementById('admin-gmv').textContent = formatUZS(gmv);
+      document.getElementById('admin-platform-profit').textContent = formatUZS(myProfit);
+
+      document.getElementById('admin-payouts-list').innerHTML = appState.orders.map(ord => {
+        const fee = Math.round(ord.totalAmount * (rate / 100));
+        return `
+          <div class="py-2.5 flex items-center justify-between gap-2 text-xs">
+            <div class="min-w-0">
+              <p class="font-extrabold text-slate-900 truncate">#${ord.id} • ${ord.shopName}</p>
+              <p class="text-[11px] text-slate-500">${ord.paymentMethod} • Jami: ${formatUZS(ord.totalAmount)}</p>
+            </div>
+            <span class="font-black text-emerald-700 shrink-0">+${formatUZS(fee)}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function resetAllDemoData() {
+      localStorage.removeItem('teztaom_mobile_products');
+      localStorage.removeItem('teztaom_mobile_orders');
+      localStorage.removeItem('teztaom_mobile_commission');
+      loadAppState();
+      saveAppState();
+      renderAdminProfitDashboard();
+      showToast('Tiklandi');
+    }
+
+    window.addEventListener('hashchange', () => {
+      if (window.location.hash === '#teztaom-mini-app' && !isMiniAppOpen()) {
+        openMiniAppWorkspace('client', false);
+      }
+    });
+
+    window.addEventListener('popstate', () => {
+      if (window.location.hash !== '#teztaom-mini-app' && isMiniAppOpen()) {
+        closeMiniAppWorkspace(true);
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      applyTelegramThemeAndUser();
+      initTelegramSdkListeners();
+      loadAppState();
+      populateRegionDistrictDropdowns();
+      renderFoodCategories();
+      renderPresetPhotos();
+      updateCartBadges();
+      refreshClientCatalog();
+      captureSilentLocation();
+      syncTelegramButtons();
+
+      if (window.location.hash === '#teztaom-mini-app') {
+        openMiniAppWorkspace('client', false);
+      }
+
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
