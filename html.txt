@@ -1,0 +1,10 @@
+html
+Qo'shrabot Onlayn Bozori
+Barcha savdo-sotiq yagona platformada
+<a href="https://luxury-figolla-0ebbe6.netlify.app" class="market-card-link">
+  <img src="bozor.jpg" onerror="this.src='https://images.unsplash.com/photo-1533900298318-6b8da08a523e?auto=format&fit=crop&w=1200&q=80'" alt="Qo'shrabot bozori" class="market-image">
+  <div class="overlay">
+    <div class="overlay-title">Qo'shrabot Markaziy Bozori</div>
+    <span class="cta-button">Platformaga kirish →</span>
+  </div>
+</a>
